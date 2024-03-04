@@ -12,8 +12,8 @@ let todos = [];
 runEvents();
 
 function runEvents() {
-    form.addEventListener("submit", addToDo); //forma bir click yapıldığında ve submit gerçekleştiğinde addToDo methoduna gitmesi söylenildi
-    document.addEventListener("DOMContentLoaded", pageLoaded) //sayfa yüklendiğinde pageLoaded methodunu çalıştır 
+    form.addEventListener("submit", addToDo); 
+    document.addEventListener("DOMContentLoaded", pageLoaded) 
     secondCardBody.addEventListener("click", removeTodoToUI);
     clearButton.addEventListener("click", allTodosEverywhere);
     filterInput.addEventListener("keyup", filter);
@@ -27,10 +27,10 @@ function filter(e) {
         todoListesi.forEach(function (todo) {
             if (todo.textContent.toLowerCase().trim().includes(filterValue)){
 
-                todo.setAttribute("style","display : block") //birbirine uyanları ekranda göster 
+                todo.setAttribute("style","display : block")
             }else{
  
-                todo.setAttribute("style","display : none !important") //birbirine uymayanları ekranda gösterme
+                todo.setAttribute("style","display : none !important") 
             }
 })
     } else {
@@ -57,10 +57,10 @@ function allTodosEverywhere() {
 
 function removeTodoToUI(e) {
 
-    if (e.target.className === "fa fa-remove") {//bastığı etiketin class ismi bu ise içerideki kodu çalıştır dedik
+    if (e.target.className === "fa fa-remove") {
         //arayüzden silme
-        const todo = e.target.parentElement.parentElement; //li elementine ulaşıldı silmek için
-        todo.remove();//seçilen todo silindi
+        const todo = e.target.parentElement.parentElement; 
+        todo.remove();
 
         //storageden silme
         removeTodoToStorage(todo.textContent);
@@ -80,29 +80,25 @@ function removeTodoToStorage(removeTodo) {
 }
 
 function pageLoaded() {
-    checkTodosFromStorage(); //todosların güncel halini getirir.
-    todos.forEach(function (todo) { //todoların üzerinde dön ve arayüze yazdır
+    checkTodosFromStorage(); 
+    todos.forEach(function (todo) { 
         addToDoUI(todo);
     });
 }
 
 function addToDo(e) {
-    const inputText = addInput.value.trim(); //eklenen değer alındı, kenarında boşluk varsa temizlendi ve değişkene atandı.
-    if (inputText == null || inputText == "") { //boş bırakılıp bırakılmadığı kontrol edildi
-        showAlert("warning", "Lütfen boş bırakmayınız !") //boş bırakılıp butona tıklanmışsa sarı renkli bir uyarı alınacak.
+    const inputText = addInput.value.trim(); 
+    if (inputText == null || inputText == "") { 
+        showAlert("warning", "Lütfen boş bırakmayınız !") 
     } else {
-        addToDoUI(inputText); //eğer boş bırakılmamışsa arayüze ekleme methodu çağırıldı ve girilen değer parametre olarak atandı.
-        addTodoToStorage(inputText);//girilen değerin storage'a da eklenmesi için tanımlanan method.
-        showAlert("success", "Todo Eklendi :)") //eklenme başarı ile gerçekleşmişse yeşil renkli bir uyarı alınacak
+        addToDoUI(inputText); 
+        addTodoToStorage(inputText);
+        showAlert("success", "Todo Eklendi :)") 
     }
-    //   arayüze ekleme
-
-    // storage'e ekleme
-
-    e.preventDefault(); //default özellikler engellendi
+    e.preventDefault(); 
 }
 
-function addToDoUI(newToDo) { //arayüze todo eklemek için method
+function addToDoUI(newToDo) { 
     /*  
     <li class="list-group-item d-flex justify-content-between">Todo 1
          <a href="#" class="delete-item">
@@ -111,17 +107,17 @@ function addToDoUI(newToDo) { //arayüze todo eklemek için method
     </li>  
     */
 
-    const li = document.createElement("li"); //li elementi ve özellikleri oluşturuldu
+    const li = document.createElement("li");
     li.className = "list-group-item d-flex justify-content-between"
-    li.textContent = newToDo; //oluşturulan her li'nin içerisine girilen yeni değerin verilmesi söylendi
+    li.textContent = newToDo;
 
 
-    const a = document.createElement("a"); //a elementi ve özellikleri oluşturuldu
+    const a = document.createElement("a"); 
     a.href = "#"
     a.className = "delete-item"
 
 
-    const i = document.createElement("i"); //i elementi ve özellikleri oluşturuldu
+    const i = document.createElement("i"); 
     i.className = "fa fa-remove"
 
 
@@ -129,40 +125,37 @@ function addToDoUI(newToDo) { //arayüze todo eklemek için method
     li.appendChild(a)
     todoList.appendChild(li)
 
-    addInput.value = ""; //ekleme yapıldıktan sonra input kısmının boşaltılması için kullanıldı
+    addInput.value = ""; 
 }
 
 function addTodoToStorage(newToDo) {
-    checkTodosFromStorage(); //kontroller yapıldı
-    todos.push(newToDo); //push methodu ile yeni değer eklendi 
-    localStorage.setItem("todos", JSON.stringify(todos)); //güncel olan todos da yazdırıldı.
+    checkTodosFromStorage(); 
+    todos.push(newToDo); 
+    localStorage.setItem("todos", JSON.stringify(todos)); 
 }
 
 
-function checkTodosFromStorage() { //bu kodlarla birlikte todos ya boş doldu ya da var olan değerler ile dolduruldu.
-    if (localStorage.getItem("todos") === null) { //localStorage da daha önce tanımlanan bir todos var mı ? yoksa temiz bir dizi şeklinde oluştur denildi.
+function checkTodosFromStorage() { 
+    if (localStorage.getItem("todos") === null) {
         todos = [];
     } else {
-        //bu kontrolü yapmayıp direkt üzerine yazdırma yapılırsa eski değerler kaybedilir!! değeri alıp üzerine koyup yenisi vermemiz gerekir.
         todos = JSON.parse(localStorage.getItem("todos"));
-        //eğer daha önceden todos değişkeni orada varsa o oradan alındı, diziye çevrildi ve todos değişkenine setlenildi.
-        //buradaki setlenilen todos en yukarıda tanımlanan global bir değişkendir.
     }
 }
 
 
-function showAlert(type, message) { //değişecek iki tane değer olduğu için bu değerler verildi
+function showAlert(type, message) { 
     /*  <div class="alert alert-warning" role="alert">
         A simple success alert—check it out!
     </div>*/
 
-    const div = document.createElement("div"); //div elementi oluşturuldu
-    div.className = `alert alert-${type}`; //uyarı tipine göre renk değiştirme modüler bir şekilde yazıldı
+    const div = document.createElement("div"); 
+    div.className = `alert alert-${type}`; 
     div.textContent = message;
 
-    firstCardBody.appendChild(div); //1. card-body classının sonunda yer alacağı belirtildi
+    firstCardBody.appendChild(div); 
 
-    setTimeout(function () { //verilen uyarının 2.5 saniye sonra kaldırılması için kullanıldı
+    setTimeout(function () { 
         div.remove();
     }, 2500)
 
